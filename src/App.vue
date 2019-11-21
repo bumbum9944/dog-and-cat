@@ -1,17 +1,46 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <GetImage btnName="멍멍" @getAnimalImage="getImage"/>
+    <GetImage btnName="야옹" @getAnimalImage="getImage"/>
+    <img v-bind:src="animalUrl" alt="">
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
-
+import axios from 'axios'
+import GetImage from './components/GetImage'
 export default {
   name: 'app',
   components: {
-    HelloWorld
+    GetImage
+  },
+  methods: {
+    getImage: function(name){
+      if (name === "멍멍"){
+        const DOG_URL = "https://dog.ceo/api/breeds/image/random"
+        axios.get(DOG_URL)
+          .then((response)=>{
+            this.animalUrl = response.data.message
+          })
+          .catch((error)=>{
+            console.log(error)
+          })
+      } else {
+         const CAT_URL ='https://api.thecatapi.com/v1/images/search'
+         axios.get(CAT_URL)
+          .then((response)=>{
+            this.animalUrl = response.data[0].url
+          })
+          .catch((error)=>{
+            console.log(error)
+          })
+      }
+    }
+  },
+  data: function(){
+    return {
+      animalUrl: ''
+    }
   }
 }
 </script>
